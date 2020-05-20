@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebLetter</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <h1>WebLetter</h1>
+    <form id="chat">
+        <div class="messages"></div>
+        <input type="text" autocomplete="off" name="username" placeholder="Digite o nome de usuário">
+        <input type="text" autocomplete="off" name="message" placeholder="Digite a mensagem">
+        <button type="submit">Enviar</button>
+    </form>
+
+    <script>
+        let socket = io('http://192.168.0.112:3000');
+
+        function renderMessage(message) {
+            $('.messages').append('<div class="message"><h2>' + message.author + '</h2><p>' + message.message + '</p></div>')
+            $('input[name=message]').val('');
+        }
+
+        socket.on('recivedMessage', function(message) {
+            renderMessage(message)
+        })
+
+        socket.on('previousMessage', function(messages) {
+            for (message of messages) {
+                renderMessage(message)
+            }
+        })
+
+        $('#chat').submit(function(event) {
+            event.preventDefault();
+
+            let author = $('input[name=username]').val();
+            let message = $('input[name=message]').val();
+
+            if (author.length && message.length) {
+
+                let messageObject = {
+                    author: author,
+                    message: message
+                };
+                if (message == '/id') {
+                    messageObject.message = `id:${socket.id}`;
+                }
+                renderMessage(messageObject)
+
+                socket.emit('sendMessage', messageObject);
+
+                if (message == '/clear') {
+                    $('.messages').html('')
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>
