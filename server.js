@@ -24,7 +24,10 @@ let messages = [];
 
 io.on('connection', socket => {
     console.log(`conectado, id:${socket.id}`);
-
+    socket.join('sala')
+    let { length } = socket.adapter.rooms['sala']
+    console.log(length)
+    socket.emit('usersOnline', length)
     socket.emit('previousMessage', messages)
 
     socket.on('sendMessage', data => {

@@ -20,6 +20,7 @@
     </script>
     <h1>WebLetter</h1>
     <form id="chat">
+        <p>Users online no momento de login: </p>
         <div class="messages"></div>
         <input type="text" autocomplete="off" name="message" placeholder="Digite a mensagem">
         <button type="submit">Enviar</button>
@@ -27,22 +28,23 @@
     </form>
 
     <script>
-        let socket = io('https://webletter.herokuapp.com/');
-
+        let socket = io('localhost:3000');
 
         function renderMessage(message) {
             $('.messages').append('<div class="message"><h2>' + message.author + '</h2><p>' + message.message + '</p></div>')
             $('input[name=message]').val('');
         }
-
         socket.on('recivedMessage', function(message) {
-            renderMessage(message)
+            renderMessage(message);
         })
 
         socket.on('previousMessage', function(messages) {
             for (message of messages) {
                 renderMessage(message)
             }
+        })
+        socket.on('usersOnline', users => {
+            $('p').append(users)
         })
 
         $('#chat').submit(function(event) {
