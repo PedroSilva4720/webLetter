@@ -95,3 +95,18 @@ button:hover {
         ;
     }
 }
+
+.all {
+    height: 90%;
+}
+
+a {
+    text-decoration: none;
+    color: black;
+    font-family: 'Poppins', sans-serif;
+    transition: 0.3s;
+}
+
+a:hover {
+    color: #9b59b6;
+}

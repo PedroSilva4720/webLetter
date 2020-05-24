@@ -5,6 +5,7 @@ const app = express();
 const server = require('http').createServer(app);
 const io = require('socket.io')(server);
 const cors = require('cors');
+const routes = express.Router()
 
 app.use(cors());
 app.use(express.static(path.join(__dirname, 'public')));
@@ -12,10 +13,13 @@ app.set('views', path.join(__dirname, 'public'));
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
 
-app.use('/', (req, res) => {
-    res.render('index.html');
-});
 
+app.use('/chat', (req, res) => {
+    res.render('chat.html');
+});
+app.use('/', (req, res) => {
+    res.render('login.html')
+});
 let messages = [];
 
 io.on('connection', socket => {
