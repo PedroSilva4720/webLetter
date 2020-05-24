@@ -28,7 +28,8 @@
     </form>
 
     <script>
-        let socket = io('localhost:3000');
+        // let socket = io('localhost:3000');
+        let socket = io('https://webletter.herokuapp.com/');
 
         function renderMessage(message) {
             $('.messages').append('<div class="message"><h2>' + message.author + '</h2><p>' + message.message + '</p></div>')
